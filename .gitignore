@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+*.egg-info/
+dist/
+.venv/
+venv/
+
+# Node / Next.js
+node_modules/
+.next/
+*.log
+npm-debug.log*
+
+# Docker / system
+.DS_Store
+Thumbs.db
+
+# Vector DB / uploads (large, user-generated)
+backend/chroma_db/
+backend/temp_uploads/
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets
+*.pem
+*.key
+.env.local
+.env.production
+
+hackathon_presentation/

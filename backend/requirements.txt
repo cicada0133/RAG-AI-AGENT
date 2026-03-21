@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+python-multipart
+langchain
+langchain-community
+langchain-core
+langchain-openai
+langchain-text-splitters
+chromadb
+PyMuPDF
+python-docx
+edge-tts
+requests

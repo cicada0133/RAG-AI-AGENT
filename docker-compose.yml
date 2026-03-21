@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # ─── Local open-source LLM (Ollama) ────────────────────────────────────────
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # ─── Backend ────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8050:8000"
+    environment:
+      # Open-source LLM via Ollama (OpenAI-compatible API)
+      - API_BASE=http://ollama:11434/v1
+      - API_KEY=ollama
+      - MODEL_NAME=${MODEL_NAME:-qwen2.5:7b}
+      # To use Gemini instead, comment the 3 lines above and uncomment:
+      # - GEMINI_API_KEY=your_key_here
+    volumes:
+      - ./backend/temp_uploads:/app/temp_uploads
+      - ./backend/chroma_db:/app/chroma_db
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  # ─── Frontend ───────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3050:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8050
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
